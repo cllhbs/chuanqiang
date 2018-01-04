@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html> 
+<head>
+<meta charset="utf-8"/>
+<meta name="description" content= " 网页描述 " />
+<meta name="keywords" content= " 关键字 " />
+<title>无标题文档</title>
+<style>
+*{margin:0; padding:0; list-style:none;}
+ul{overflow:hidden; width:630px;}
+li{width:200px; height:200px; float:left; background:#ccc; position:relative; left:0; top:0; margin:5px; line-height:200px; font-size:30px; overflow:hidden;}
+li span{width:100%; height:100%; background:rgba(255,0,0,0.5); position:absolute; left:-200px;}
+</style>
+<script src="move5.js"></script>
+<script>
+//弧度转角度
+function a2d(n){
+	return n*180/Math.PI;
+}
+function hoverDir(obj,ev){
+	var w=obj.offsetWidth;
+	var h=obj.offsetHeight;
+	var x=obj.offsetLeft+w/2-ev.clientX;
+	var y=obj.offsetTop+h/2-ev.clientY;
+	return Math.round((a2d(Math.atan2(y,x))+180)/90)%4;
+}
+function through(obj){
+	var oS=obj.children[0];
+	obj.onmouseover=function(ev){
+		var oEvent=ev||event;
+		var dir=hoverDir(this,oEvent);
+		var oFrom=oEvent.fromeElement||oEvent.relatedTarget;
+		if(this.contains(oFrom))return;
+		switch(dir){
+			case 2:
+				oS.style.left='-200px';
+				oS.style.top=0;
+				break;
+			case 3:
+				oS.style.left=0;
+				oS.style.top='-200px';
+				break;
+			case 0:
+				oS.style.left='200px';
+				oS.style.top=0;
+				break;
+			case 1:
+				oS.style.left=0;
+				oS.style.top='200px';
+				break;
+		}
+		startMove(oS,{left:0,top:0});
+	};
+	obj.onmouseout=function(ev){
+		var oEvent=ev||event;
+		var dir=hoverDir(this,oEvent);
+		var oTo=oEvent.toElement||relatedTarget;
+		if(this.contains(oTo))return;
+		switch(dir){
+			case 2:
+				startMove(oS,{left:-200,top:0});
+				break;
+			case 3:
+				startMove(oS,{left:0,top:-200});
+				break;
+			case 0:
+				startMove(oS,{left:200,top:0});
+				break;
+			case 1:
+				startMove(oS,{left:0,top:200});
+				break;
+		}
+	};
+}
+window.onload=function(){
+	var oUl=document.getElementsByTagName('ul')[0];
+	var aLi = oUl.children;
+	for(var i=0;i<aLi.length;i++){
+		through(aLi[i]);
+	}
+	
+};
+</script>
+</head>
+<body>
+	<ul>
+		<li><span></span></li>
+		<li><span></span></li>
+		<li><span></span></li>
+		<li><span></span></li>
+		<li><span></span></li>
+		<li><span></span></li>
+	</ul>
+</body>
+</html>
